@@ -14,7 +14,7 @@
         <collectionProp name="Arguments.arguments">
           <elementProp name="url" elementType="Argument">
             <stringProp name="Argument.name">url</stringProp>
-            <stringProp name="Argument.value">524cd560-cc9c-4937-a348-e4aad983908d.mock.pstmn.io</stringProp>
+            <stringProp name="Argument.value">9f76480f-37f0-46c5-970b-e2145817ceb9.mock.pstmn.io</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="contentType" elementType="Argument">
@@ -82,154 +82,30 @@
             <stringProp name="Argument.value">headersdatacpm.csv</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
+          <elementProp name="Blacklist" elementType="Argument">
+            <stringProp name="Argument.name">Blacklist</stringProp>
+            <stringProp name="Argument.value">Blacklist.xlsx</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="NUM_THREADS" elementType="Argument">
+            <stringProp name="Argument.name">NUM_THREADS</stringProp>
+            <stringProp name="Argument.value">${__P(NUM_THREADS,1)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="RAMP_UP_PERIOD" elementType="Argument">
+            <stringProp name="Argument.name">RAMP_UP_PERIOD</stringProp>
+            <stringProp name="Argument.value">${__P(RAMP_UP_PERIOD,1)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="LOOP_COUNT" elementType="Argument">
+            <stringProp name="Argument.name">LOOP_COUNT</stringProp>
+            <stringProp name="Argument.value">${__P(LOOP_COUNT,1)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
         </collectionProp>
       </Arguments>
       <hashTree/>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group">
-        <intProp name="ThreadGroup.num_threads">1</intProp>
-        <intProp name="ThreadGroup.ramp_time">1</intProp>
-        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
-        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
-        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller">
-          <stringProp name="LoopController.loops">1</stringProp>
-          <boolProp name="LoopController.continue_forever">false</boolProp>
-        </elementProp>
-      </ThreadGroup>
-      <hashTree>
-        <OnceOnlyController guiclass="OnceOnlyControllerGui" testclass="OnceOnlyController" testname="Check Header Controller" enabled="true"/>
-        <hashTree>
-          <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="check header csv data " enabled="true">
-            <stringProp name="scriptLanguage">groovy</stringProp>
-            <stringProp name="parameters"></stringProp>
-            <stringProp name="filename"></stringProp>
-            <stringProp name="cacheKey">true</stringProp>
-            <stringProp name="script">import org.apache.commons.io.FileUtils;
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.util.Arrays;
-import java.util.List;
-
-// โหลดไฟล์ CSV และไฟล์ Header อ้างอิง
-String basePath = org.apache.jmeter.services.FileServer.getFileServer().getBaseDir();
-String csvFilePath = basePath + &quot;/&quot; + vars.get(&quot;TestUserFile&quot;);
-String headerFilePath = basePath + &quot;/&quot; + vars.get(&quot;headersdata&quot;);
-
-// อ่านข้อมูลจากไฟล์ CSV
-List&lt;String&gt; lines = FileUtils.readLines(new File(csvFilePath), &quot;UTF-8&quot;);
-if (lines == null || lines.isEmpty()) {
-    throw new IllegalArgumentException(&quot;ไฟล์ CSV ว่างเปล่าหรือไม่สามารถโหลดได้: &quot; + csvFilePath);
-}
-
-// อ่าน Expected Headers จากไฟล์ header.txt
-String expectedHeadersLine = FileUtils.readFileToString(new File(headerFilePath), &quot;UTF-8&quot;).trim();
-List&lt;String&gt; expectedHeaders = Arrays.asList(expectedHeadersLine.split(&quot;;&quot;));
-
-// ดึง Header จริงจาก CSV
-String actualHeadersLine = lines.get(0).trim();
-List&lt;String&gt; actualHeaders = Arrays.asList(actualHeadersLine.split(&quot;;&quot;));
-
-// ตรวจสอบ Header ที่ขาดหายไป
-List&lt;String&gt; missingHeaders = expectedHeaders.stream()
-    .filter(header -&gt; !actualHeaders.contains(header))
-    .toList();
-    
-
-if (!missingHeaders.isEmpty()) {
-    // ระบุ path ไฟล์ log
-    String logFilePath = basePath + &quot;/missing_headers_log_data.txt&quot;;
-    File logFile = new File(logFilePath);
-
-    try {
-        // ลบไฟล์หากมีอยู่
-        if (logFile.exists()) {
-            logFile.delete();
-        }
-
-        // สร้างไฟล์ใหม่และบันทึกข้อความ
-        String logMessage = &quot;Missing headers: &quot; + String.join(&quot;, &quot;, missingHeaders) + &quot;\n&quot;;
-        Files.write(Paths.get(logFilePath), logMessage.getBytes(), StandardOpenOption.CREATE);
-        log.info(&quot;Logged missing headers to: &quot; + logFilePath);
-    } catch (Exception e) {
-        log.error(&quot;Error writing to log file: &quot; + e.getMessage());
-        throw new RuntimeException(&quot;Error logging missing headers&quot;, e);
-    }
-
-    // หยุด Test Plan หรือ Thread Group ตามความต้องการ
-    //SampleResult.setStopTest(true); // หยุด Test Plan ทั้งหมด
-    throw new IllegalArgumentException(&quot;missing headers: &quot; + String.join(&quot;, &quot;, missingHeaders));
-}
-</stringProp>
-          </JSR223Sampler>
-          <hashTree/>
-          <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="check header csv CPM" enabled="true">
-            <stringProp name="scriptLanguage">groovy</stringProp>
-            <stringProp name="parameters"></stringProp>
-            <stringProp name="filename"></stringProp>
-            <stringProp name="cacheKey">true</stringProp>
-            <stringProp name="script">import org.apache.commons.io.FileUtils;
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.util.Arrays;
-import java.util.List;
-
-// โหลดไฟล์ CSV และไฟล์ Header อ้างอิง
-String basePath = org.apache.jmeter.services.FileServer.getFileServer().getBaseDir();
-String csvFilePath = basePath + &quot;/&quot; + vars.get(&quot;CallProcessManager&quot;);
-String headerFilePath = basePath + &quot;/&quot; + vars.get(&quot;headersdataCPM&quot;);
-
-// อ่านข้อมูลจากไฟล์ CSV
-List&lt;String&gt; lines = FileUtils.readLines(new File(csvFilePath), &quot;UTF-8&quot;);
-if (lines == null || lines.isEmpty()) {
-    throw new IllegalArgumentException(&quot;ไฟล์ CSV ว่างเปล่าหรือไม่สามารถโหลดได้: &quot; + csvFilePath);
-}
-
-// อ่าน Expected Headers จากไฟล์ header.txt
-String expectedHeadersLine = FileUtils.readFileToString(new File(headerFilePath), &quot;UTF-8&quot;).trim();
-List&lt;String&gt; expectedHeaders = Arrays.asList(expectedHeadersLine.split(&quot;;&quot;));
-
-// ดึง Header จริงจาก CSV
-String actualHeadersLine = lines.get(0).trim();
-List&lt;String&gt; actualHeaders = Arrays.asList(actualHeadersLine.split(&quot;;&quot;));
-
-// ตรวจสอบ Header ที่ขาดหายไป
-List&lt;String&gt; missingHeaders = expectedHeaders.stream()
-    .filter(header -&gt; !actualHeaders.contains(header))
-    .toList();
-
-if (!missingHeaders.isEmpty()) {
-    // ระบุ path ไฟล์ log
-    String logFilePath = basePath + &quot;/missing_headers_log_cpm.txt&quot;;
-    File logFile = new File(logFilePath);
-
-    try {
-        // ลบไฟล์หากมีอยู่
-        if (logFile.exists()) {
-            logFile.delete();
-        }
-
-        // สร้างไฟล์ใหม่และบันทึกข้อความ
-        String logMessage = &quot;Missing headers: &quot; + String.join(&quot;, &quot;, missingHeaders) + &quot;\n&quot;;
-        Files.write(Paths.get(logFilePath), logMessage.getBytes(), StandardOpenOption.CREATE);
-        log.info(&quot;Logged missing headers to: &quot; + logFilePath);
-    } catch (Exception e) {
-        log.error(&quot;Error writing to log file: &quot; + e.getMessage());
-        throw new RuntimeException(&quot;Error logging missing headers&quot;, e);
-    }
-
-    // หยุด Test Plan หรือ Thread Group ตามความต้องการ
-//    SampleResult.setStopTest(true); // หยุด Test Plan ทั้งหมด
-    throw new IllegalArgumentException(&quot;missing headers: &quot; + String.join(&quot;, &quot;, missingHeaders));
-}
-</stringProp>
-          </JSR223Sampler>
-          <hashTree/>
-        </hashTree>
-      </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="SasViya">
         <intProp name="ThreadGroup.num_threads">1</intProp>
         <intProp name="ThreadGroup.ramp_time">1</intProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">false</boolProp>
@@ -259,7 +135,7 @@ if (!missingHeaders.isEmpty()) {
         <hashTree/>
         <OnceOnlyController guiclass="OnceOnlyControllerGui" testclass="OnceOnlyController" testname="Once Only Controller" enabled="true"/>
         <hashTree>
-          <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Get Data From CSV  TestData">
+          <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Get Data From CSV  TestData" enabled="true">
             <stringProp name="cacheKey">true</stringProp>
             <stringProp name="filename"></stringProp>
             <stringProp name="parameters"></stringProp>
@@ -327,7 +203,7 @@ for (int j = 0; j &lt; variableNames.length; j++) {
             <stringProp name="scriptLanguage">groovy</stringProp>
           </JSR223Sampler>
           <hashTree/>
-          <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Get Data From CSV  TestDataCPM">
+          <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Get Data From CSV  TestDataCPM" enabled="true">
             <stringProp name="scriptLanguage">groovy</stringProp>
             <stringProp name="parameters"></stringProp>
             <stringProp name="filename"></stringProp>
@@ -468,7 +344,7 @@ log.info(&quot;Body:&quot; + vars.get(&quot;requestBody&quot;));
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GetAlert">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GetAlert" enabled="true">
             <stringProp name="HTTPSampler.domain">${url}</stringProp>
             <stringProp name="HTTPSampler.protocol">${https}</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -502,7 +378,7 @@ log.info(&quot;Body:&quot; + vars.get(&quot;requestBody&quot;));
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GetReviewAndAction">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GetReviewAndAction" enabled="true">
             <stringProp name="HTTPSampler.domain">${url}</stringProp>
             <stringProp name="HTTPSampler.protocol">${https}</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -536,7 +412,7 @@ log.info(&quot;Body:&quot; + vars.get(&quot;requestBody&quot;));
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GetReviewAndActionByRuleCode">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GetReviewAndActionByRuleCode" enabled="true">
             <stringProp name="HTTPSampler.domain">${url}</stringProp>
             <stringProp name="HTTPSampler.protocol">${https}</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -571,7 +447,7 @@ log.info(&quot;Body:&quot; + vars.get(&quot;requestBody&quot;));
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CallProcessManager">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CallProcessManager" enabled="true">
             <stringProp name="HTTPSampler.domain">${url}</stringProp>
             <stringProp name="HTTPSampler.protocol">${https}</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>
@@ -606,7 +482,7 @@ log.info(&quot;Body:&quot; + vars.get(&quot;requestBody&quot;));
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ConfirmFraud">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ConfirmFraud" enabled="true">
             <stringProp name="HTTPSampler.domain">${url}</stringProp>
             <stringProp name="HTTPSampler.protocol">${https}</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -731,32 +607,64 @@ log.info(&quot;Body:&quot; + vars.get(&quot;requestBody&quot;));
             </elementProp>
           </HTTPSamplerProxy>
           <hashTree>
-            <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="J" enabled="true">
+            <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="Json Request body" enabled="true">
               <stringProp name="scriptLanguage">groovy</stringProp>
               <stringProp name="parameters"></stringProp>
               <stringProp name="filename"></stringProp>
               <stringProp name="cacheKey">true</stringProp>
               <stringProp name="script">import groovy.json.JsonOutput
 
-// Retrieve a value from a variable in JMeter.
+// Function to adjust array sizes by padding with empty strings
+def adjustArraySizes(String[] array_site1, String[] array_site2) {
+    int size1 = array_site1.length
+    int size2 = array_site2.length
+    
+    int maxSize = [size1, size2].max() // Find the maximum size of both arrays.
+    
+        if (size1 &lt; maxSize) {
+            int diff = maxSize - size1
+            array_site1 += (1..diff).collect { &quot;&quot; } // Pad array_site1 with empty strings when array_site1 &lt; maxSize
+            }
+            
+        if (size2 &lt; maxSize) {
+            int diff = maxSize - size2
+            array_site2 += (1..diff).collect { &quot;&quot; } // Pad array_site1 with empty strings when array_site2 &lt; maxSize
+        }
+    
+    return [array_site1, array_site2]
+}
+// -----------------------------------------------------------------------------------
+
+// Retrieve and process Reason data
 String reasonCode = vars.get(&quot;reason_code&quot;)
 String reasonDesc = vars.get(&quot;reason_desc&quot;)
-String[] reason_code = reasonCode ? reasonCode.split(&quot;,&quot;) : []  // Check the value first.
-String[] reason_desc = reasonDesc ? reasonDesc.split(&quot;,&quot;) : []  // Check the value first.
-int reason_code_size = reason_code.length
+String[] reason_code = reasonCode ? reasonCode.split(&quot;,&quot;).collect{it .trim()} : []
+String[] reason_desc = reasonDesc ? reasonDesc.split(&quot;,&quot;).collect{it .trim()} : []
 
+// Adjust Reason arrays
+(reason_code, reason_desc) = adjustArraySizes(reason_code, reason_desc)
+
+
+// Retrieve and process Blacklist data
 String blacklistFieldName = vars.get(&quot;field_name&quot;)
 String blacklistValue = vars.get(&quot;value&quot;)
-String[] field_name = blacklistFieldName ? blacklistFieldName.split(&quot;,&quot;).collect {it .trim()} : []  // Check the value first.
-String[] value = blacklistValue ? blacklistValue.split(&quot;,&quot;) : []  // Check the value first.
+String[] field_name = blacklistFieldName ? blacklistFieldName.split(&quot;,&quot;).collect{it .trim()} : []
+String[] value = blacklistValue ? blacklistValue.split(&quot;,&quot;).collect{it .trim()} : []
+
+// Adjust Blacklist arrays
+(field_name, value) = adjustArraySizes(field_name, value)
+
+
+// ----------------------------------------------------------------------------------------------
+int reason_code_size = reason_code.length 	
 int field_name_size = field_name.length
 
-// Prepare a List to store JSON data
+// Prepare JSON lists
 def reasonsList = []
 def blacklistsList = []
 
-// Create a list of Reason JSON
-for(int i = 0; i &lt; reason_code_size; i++){
+// Populate Reason JSON list
+for (int i = 0; i &lt; reason_code_size; i++) {
     def reason = [
         &quot;reason_code&quot;: reason_code[i],
         &quot;reason_desc&quot;: reason_desc[i]
@@ -764,8 +672,8 @@ for(int i = 0; i &lt; reason_code_size; i++){
     reasonsList.add(reason)
 }
 
-// Create a list of Blacklist JSON.
-for(int i = 0; i &lt; field_name_size; i++){
+// Populate Blacklist JSON list
+for (int i = 0; i &lt; field_name_size; i++) {
     def blacklist = [
         &quot;field_name&quot;: field_name[i],
         &quot;value&quot;: value[i]
@@ -773,13 +681,14 @@ for(int i = 0; i &lt; field_name_size; i++){
     blacklistsList.add(blacklist)
 }
 
-// Convert to JSON String.
-String blacklistsJson = JsonOutput.toJson(blacklistsList)
+// Convert lists to JSON strings
 String reasonsJson = JsonOutput.toJson(reasonsList)
+String blacklistsJson = JsonOutput.toJson(blacklistsList)
 
-// Store the result in a JMeter variable.
-vars.put(&quot;blacklistsJson&quot;, blacklistsJson)
-vars.put(&quot;reasonsJson&quot;, reasonsJson)</stringProp>
+
+// Store the JSON strings in JMeter variables
+vars.put(&quot;reasonsJson&quot;, reasonsJson)
+vars.put(&quot;blacklistsJson&quot;, blacklistsJson)</stringProp>
             </JSR223PreProcessor>
             <hashTree/>
             <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
@@ -797,7 +706,7 @@ vars.put(&quot;reasonsJson&quot;, reasonsJson)</stringProp>
             </ConstantTimer>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="UpdateStatusReassign">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="UpdateStatusReassign" enabled="true">
             <stringProp name="HTTPSampler.domain">${url}</stringProp>
             <stringProp name="HTTPSampler.protocol">${https}</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -878,7 +787,7 @@ vars.put(&quot;reasonsJson&quot;, reasonsJson)</stringProp>
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="UpdateGenuine">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="UpdateGenuine" enabled="true">
             <stringProp name="HTTPSampler.domain">${url}</stringProp>
             <stringProp name="HTTPSampler.protocol">${https}</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -959,7 +868,7 @@ vars.put(&quot;reasonsJson&quot;, reasonsJson)</stringProp>
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="UpdateGenuineSC">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="UpdateGenuineSC" enabled="true">
             <stringProp name="HTTPSampler.domain">${url}</stringProp>
             <stringProp name="HTTPSampler.protocol">${https}</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>
@@ -1043,7 +952,7 @@ vars.put(&quot;reasonsJson&quot;, reasonsJson)</stringProp>
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="AddMemo">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="AddMemo" enabled="true">
             <stringProp name="HTTPSampler.domain">${url}</stringProp>
             <stringProp name="HTTPSampler.protocol">${https}</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -1127,7 +1036,7 @@ vars.put(&quot;reasonsJson&quot;, reasonsJson)</stringProp>
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GetMemo">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GetMemo" enabled="true">
             <stringProp name="HTTPSampler.domain">${url}</stringProp>
             <stringProp name="HTTPSampler.protocol">${https}</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -1187,43 +1096,76 @@ vars.put(&quot;reasonsJson&quot;, reasonsJson)</stringProp>
             </elementProp>
           </HTTPSamplerProxy>
           <hashTree>
-            <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor" enabled="true">
+            <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="Json Request body" enabled="true">
               <stringProp name="scriptLanguage">groovy</stringProp>
               <stringProp name="parameters"></stringProp>
               <stringProp name="filename"></stringProp>
               <stringProp name="cacheKey">true</stringProp>
               <stringProp name="script">import groovy.json.JsonOutput
 
-// Retrieve a value from a variable in JMeter.
+// Function to adjust array sizes by padding with empty strings
+def adjustArraySizes(String[] array_site1, String[] array_site2, String[] array_site3) {
+    int size1 = array_site1.length
+    int size2 = array_site2.length
+    int size3 = array_site3.length
+
+    int maxSize = [size1, size2, size3].max() // Find the maximum size of both arrays.
+    
+    if (size1 &lt; maxSize) {
+        int diff = maxSize - size1
+        array_site1 += (1..diff).collect { &quot;&quot; } // Pad array_site1 with empty strings when array_site1 &lt; maxSize
+    }
+
+    if (size2 &lt; maxSize) {
+        int diff = maxSize - size2
+        array_site2 += (1..diff).collect { &quot;&quot; } // Pad array_site2 with empty strings when array_site2 &lt; maxSize
+    }
+
+    if (size3 &lt; maxSize) {
+        int diff = maxSize - size3
+        array_site3 += (1..diff).collect { &quot;&quot; } // Pad array_site3 with empty strings when array_site3 &lt; maxSize
+    }
+
+    return [array_site1, array_site2, array_site3]
+}
+
+// -----------------------------------------------------------------------------------------------
+
+// Retrieve values from JMeter variables
 String conditionsFieldName = vars.get(&quot;field_name&quot;) 
 String conditionOper = vars.get(&quot;oper&quot;)
 String conditionValue = vars.get(&quot;value&quot;)
 
-String[] field_name = conditionsFieldName ? conditionsFieldName.split(&quot;,&quot;) : [] // Check the value first.
-String[] oper = conditionOper ? conditionOper.split(&quot;,&quot;) : [] // Check the value first.
-String[] value = conditionValue ? conditionValue.split(&quot;,&quot;) : [] // Check the value first.
-int field_name_size = field_name.length
+// Split and trim input strings into arrays
+String[] field_name = conditionsFieldName ? conditionsFieldName.split(&quot;,&quot;).collect { it.trim() } : []
+String[] oper = conditionOper ? conditionOper.split(&quot;,&quot;).collect { it.trim() } : []
+String[] value = conditionValue ? conditionValue.split(&quot;,&quot;).collect { it.trim() } : []
 
+// Adjust sizes of the arrays
+(field_name, oper, value) = adjustArraySizes(field_name, oper, value)
+
+// -----------------------------------------------------------------------------------------------
+int field_name_size = field_name.length
 
 // Prepare a List to store JSON data
 def conditionsList = []
 
-// Create a list of Blacklist JSON
-for(int i = 0; i &lt; field_name_size; i++){
+// Iterate through arrays to create JSON objects
+for (int i = 0; i &lt; field_name_size; i++) {
     def condition = [
         &quot;field_name&quot;: field_name[i],
-        &quot;oper&quot;: oper[i],
-        &quot;value&quot;: value[i]
+        &quot;oper&quot;      : oper[i],
+        &quot;value&quot;     : value[i]
     ]
     conditionsList.add(condition)
 }
 
-
-// Convert to JSON String.
+// Convert list to JSON string
 String conditionslistJton = JsonOutput.toJson(conditionsList)
 
-// Store the result in a JMeter variable.
-vars.put(&quot;conditionslistJton&quot;, conditionslistJton)</stringProp>
+// Store the result in a JMeter variable
+vars.put(&quot;conditionslistJton&quot;, conditionslistJton)
+</stringProp>
             </JSR223PreProcessor>
             <hashTree/>
             <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
@@ -1237,7 +1179,7 @@ vars.put(&quot;conditionslistJton&quot;, conditionslistJton)</stringProp>
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GetAllFieldName">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GetAllFieldName" enabled="true">
             <stringProp name="HTTPSampler.domain">${url}</stringProp>
             <stringProp name="HTTPSampler.protocol">${https}</stringProp>
             <stringProp name="HTTPSampler.path">/Fraud/GetAllFieldName</stringProp>
@@ -1269,7 +1211,7 @@ vars.put(&quot;conditionslistJton&quot;, conditionslistJton)</stringProp>
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CheckState">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CheckState" enabled="true">
             <stringProp name="HTTPSampler.domain">${url}</stringProp>
             <stringProp name="HTTPSampler.protocol">${https}</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>
@@ -1304,9 +1246,283 @@ vars.put(&quot;conditionslistJton&quot;, conditionslistJton)</stringProp>
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GetMasterData" enabled="true">
+            <stringProp name="HTTPSampler.domain">${url}</stringProp>
+            <stringProp name="HTTPSampler.protocol">${https}</stringProp>
+            <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+            <stringProp name="HTTPSampler.path">/Fraud/GetMasterData</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">{&#xd;
+    &quot;transaction_id&quot;: &quot;${transaction_id}&quot;&#xd;
+}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="49586">200</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.custom_message"></stringProp>
+              <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+              <boolProp name="Assertion.assume_success">false</boolProp>
+              <intProp name="Assertion.test_type">16</intProp>
+            </ResponseAssertion>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GetLstBlacklistCkbOnPopup" enabled="true">
+            <stringProp name="HTTPSampler.domain">${url}</stringProp>
+            <stringProp name="HTTPSampler.protocol">${https}</stringProp>
+            <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+            <stringProp name="HTTPSampler.path">/Fraud/GetLstBlacklistCkbOnPopup</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">{&#xd;
+    &quot;transaction_id&quot;: &quot;${transaction_id}&quot;,&#xd;
+    &quot;request_no&quot; : &quot;${request_no}&quot;&#xd;
+}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="49586">200</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.custom_message"></stringProp>
+              <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+              <boolProp name="Assertion.assume_success">false</boolProp>
+              <intProp name="Assertion.test_type">16</intProp>
+            </ResponseAssertion>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="AddBlackListData" enabled="true">
+            <stringProp name="HTTPSampler.domain">${url}</stringProp>
+            <stringProp name="HTTPSampler.protocol">${https}</stringProp>
+            <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+            <stringProp name="HTTPSampler.path">/BlackList/AddBlackListData</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">{&#xd;
+    &quot;transaction_id&quot;: &quot;${transaction_id}&quot;,&#xd;
+    &quot;person_type&quot;: &quot;${persontype}&quot;,&#xd;
+    &quot;id_card_no&quot;: &quot;${idcardno}&quot;,&#xd;
+    &quot;prefix&quot; : &quot;${prefix}&quot;,&#xd;
+    &quot;cust_name&quot; : &quot;${custname}&quot;,&#xd;
+    &quot;cust_surname&quot; : &quot;${custsurname}&quot;,&#xd;
+    &quot;blacklist_source&quot; : &quot;${blacklistsource}&quot;,&#xd;
+    &quot;remark&quot; : &quot;${remark}&quot;,&#xd;
+    &quot;request_no&quot; : &quot;${request_no}&quot;,&#xd;
+    &quot;request_date&quot; : &quot;${requestdate}&quot;,&#xd;
+    &quot;active_flag&quot; : &quot;${activeflag}&quot;,&#xd;
+    &quot;address_string1&quot; : &quot;${address_string1}&quot;,&#xd;
+    &quot;address_string2&quot; : &quot;${address_string2}&quot;,&#xd;
+    &quot;address_string3&quot; : &quot;${address_string3}&quot;,&#xd;
+    &quot;full_address&quot; : &quot;${fulladdress}&quot;,&#xd;
+    &quot;address_no&quot; : &quot;${addressno}&quot;,&#xd;
+    &quot;moo&quot; : &quot;${moo}&quot;,&#xd;
+    &quot;village&quot; : &quot;${village}&quot;,&#xd;
+    &quot;floor&quot; : &quot;${floor}&quot;,&#xd;
+    &quot;room_no&quot; : &quot;${roomno}&quot;,&#xd;
+    &quot;trok&quot; : &quot;${trok}&quot;,&#xd;
+    &quot;soi&quot; : &quot;${soi}&quot;,&#xd;
+    &quot;road&quot; : &quot;${road}&quot;,&#xd;
+    &quot;sub_district_code&quot; : &quot;${subdistrictcode}&quot;,&#xd;
+    &quot;district_code&quot; : &quot;${districtcode}&quot;,&#xd;
+    &quot;province_code&quot; : &quot;${provincecode}&quot;,&#xd;
+    &quot;zipcode&quot; : &quot;${zipcode}&quot;,&#xd;
+    &quot;mobile_no&quot; : &quot;${mobile}&quot;,&#xd;
+    &quot;home_tel_no&quot; : &quot;${home_tel_no}&quot;,&#xd;
+    &quot;home_tel_no_end&quot; : &quot;${home_tel_no_end}&quot;,&#xd;
+    &quot;home_tel_no_ext_start&quot; : &quot;${hometelextstart}&quot;,&#xd;
+    &quot;home_tel_no_ext_end&quot; : &quot;${hometelextend}&quot;,&#xd;
+    &quot;office_address_string1&quot; : &quot;${office_address_string1}&quot;,&#xd;
+    &quot;office_address_string2&quot; : &quot;${office_address_string2}&quot;,&#xd;
+    &quot;office_address_string3&quot; : &quot;${office_address_string3}&quot;,&#xd;
+    &quot;office_full_address&quot; : &quot;${officefulladdress}&quot;,&#xd;
+    &quot;office_address_no&quot; : &quot;${officeaddressno}&quot;,&#xd;
+    &quot;office_moo&quot; : &quot;${officemoo}&quot;,&#xd;
+    &quot;office_village&quot; : &quot;${officevillage}&quot;,&#xd;
+    &quot;office_floor&quot; : &quot;${officefloor}&quot;,&#xd;
+    &quot;office_room_no&quot; : &quot;${officeroomno}&quot;,&#xd;
+    &quot;office_trok&quot; : &quot;${officetrok}&quot;,&#xd;
+    &quot;office_soi&quot; : &quot;${officesoi}&quot;,&#xd;
+    &quot;office_road&quot; : &quot;${officeroad}&quot;,&#xd;
+    &quot;office_sub_district_code&quot; : &quot;${officesubdistrictcode}&quot;,&#xd;
+    &quot;office_district_code&quot; : &quot;${officedistrictcode}&quot;,&#xd;
+    &quot;office_province_code&quot; : &quot;${officeprovincecode}&quot;,&#xd;
+    &quot;office_zipcode&quot; : &quot;${officezipcode}&quot;,&#xd;
+    &quot;office_tel_no&quot; : &quot;${officetel}&quot;,&#xd;
+    &quot;office_tel_no_end&quot; : &quot;${officetelend}&quot;,&#xd;
+    &quot;office_tel_no_ext_start&quot; : &quot;${officetelextstart}&quot;,&#xd;
+    &quot;office_tel_no_ext_end&quot; : &quot;${officetelextend}&quot;,&#xd;
+    &quot;work_company_name&quot; : &quot;${workcompanyname}&quot;,&#xd;
+    &quot;datasource&quot; : &quot;${datasource}&quot;,&#xd;
+    &quot;chassis_no&quot; : &quot;${chassis_no}&quot;,&#xd;
+    &quot;license_no&quot; : &quot;${license_no}&quot;,&#xd;
+    &quot;license_province_code&quot; : &quot;${license_province_code}&quot;,&#xd;
+    &quot;chassis_no_cleansing&quot; : &quot;${chassis_no_cleansing}&quot;,&#xd;
+    &quot;license_no_cleansing&quot; : &quot;${license_no_cleansing}&quot;&#xd;
+}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="49586">200</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.custom_message"></stringProp>
+              <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+              <boolProp name="Assertion.assume_success">false</boolProp>
+              <intProp name="Assertion.test_type">16</intProp>
+            </ResponseAssertion>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ImportBlackListData" enabled="true">
+            <stringProp name="HTTPSampler.domain">${url}</stringProp>
+            <stringProp name="HTTPSampler.protocol">${https}</stringProp>
+            <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+            <stringProp name="HTTPSampler.path">/BlackList/ImportBlackListData</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <elementProp name="HTTPsampler.Files" elementType="HTTPFileArgs">
+              <collectionProp name="HTTPFileArgs.files">
+                <elementProp name="${Blacklist}" elementType="HTTPFileArg">
+                  <stringProp name="File.mimetype">application/vnd.openxmlformats-officedocument.spreadsheetml.sheet </stringProp>
+                  <stringProp name="File.path">${Blacklist}</stringProp>
+                  <stringProp name="File.paramname">attach_file</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="transaction_id" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">${transaction_id}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                  <stringProp name="Argument.name">transaction_id</stringProp>
+                  <stringProp name="HTTPArgument.content_type">text</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
+              <stringProp name="ConstantTimer.delay">5000</stringProp>
+            </ConstantTimer>
+            <hashTree/>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="49586">200</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.custom_message"></stringProp>
+              <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+              <boolProp name="Assertion.assume_success">false</boolProp>
+              <intProp name="Assertion.test_type">16</intProp>
+            </ResponseAssertion>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="DownloadImage" enabled="true">
+            <stringProp name="HTTPSampler.domain">${url}</stringProp>
+            <stringProp name="HTTPSampler.protocol">${https}</stringProp>
+            <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+            <stringProp name="HTTPSampler.path">/Fraud/DownloadImage</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">{&#xd;
+    &quot;transaction_id&quot;: &quot;${transaction_id}&quot;,&#xd;
+    &quot;ref_id&quot;: &quot;${ref_id}&quot;&#xd;
+}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="49586">200</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.custom_message"></stringProp>
+              <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+              <boolProp name="Assertion.assume_success">false</boolProp>
+              <intProp name="Assertion.test_type">16</intProp>
+            </ResponseAssertion>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="UpdateStateAfterClosePageReview" enabled="true">
+            <stringProp name="HTTPSampler.domain">${url}</stringProp>
+            <stringProp name="HTTPSampler.protocol">${https}</stringProp>
+            <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+            <stringProp name="HTTPSampler.path">/Fraud/UpdateStateAfterClosePageReviewAction</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">{&#xd;
+    &quot;transaction_id&quot;: &quot;${transaction_id}&quot;,&#xd;
+    &quot;request_no&quot;: &quot;${request_no}&quot;,&#xd;
+    &quot;username&quot;: &quot;${username}&quot;&#xd;
+}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="49586">200</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.custom_message"></stringProp>
+              <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+              <boolProp name="Assertion.assume_success">false</boolProp>
+              <intProp name="Assertion.test_type">16</intProp>
+            </ResponseAssertion>
+            <hashTree/>
+          </hashTree>
         </hashTree>
       </hashTree>
-      <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree">
+      <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
         <boolProp name="ResultCollector.error_logging">false</boolProp>
         <objProp>
           <name>saveConfig</name>
@@ -1377,7 +1593,7 @@ vars.put(&quot;conditionslistJton&quot;, conditionslistJton)</stringProp>
             <connectTime>true</connectTime>
           </value>
         </objProp>
-        <stringProp name="filename">C:\Program Files (x86)\apache-jmeter-5.6.3\Job\Project SAS VIYA\Project SAS VIYA\SearchTransHistory.csv</stringProp>
+        <stringProp name="filename">/Users/penploys/Desktop/Project SAS VIYA/SAS VIYA.csv</stringProp>
       </ResultCollector>
       <hashTree/>
       <ResultCollector guiclass="StatGraphVisualizer" testclass="ResultCollector" testname="Aggregate Graph" enabled="true">

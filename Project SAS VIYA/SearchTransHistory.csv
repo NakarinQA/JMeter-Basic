@@ -1,9 +1,0 @@
-timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
-1737360945154,19,Get Data From CSV  TestData,200,OK,Thread Group 2-1,text,true,,0,0,1,2,null,0,0,0
-1737360945153,27,check header csv data ,200,OK,Thread Group 1-1,text,true,,0,0,1,2,null,0,0,0
-1737360945180,34,check header csv CPM,200,OK,Thread Group 1-1,text,true,,0,0,1,2,null,0,0,0
-1737360945175,139,Get Data From CSV  TestDataCPM,200,OK,Thread Group 2-1,text,true,,0,0,1,1,null,0,0,0
-1737360945315,2058,Login,200,OK,Thread Group 2-1,text,true,,1051,348,1,1,https://524cd560-cc9c-4937-a348-e4aad983908d.mock.pstmn.io/auth/login,2058,0,1563
-1737360945314,2058,Login Controller,200,"Number of samples in transaction : 1, number of failing samples : 0",Thread Group 2-1,,true,,1051,348,1,1,null,2058,2,1563
-1737360947385,771,SearchTransHistory,200,OK,Thread Group 2-1,text,true,,391,773,1,1,http://524cd560-cc9c-4937-a348-e4aad983908d.mock.pstmn.io/Fraud/SearchTransHistory,771,0,74
-1737360947374,771,Transaction Controller,200,"Number of samples in transaction : 1, number of failing samples : 0",Thread Group 2-1,,true,,391,773,1,1,null,771,11,74

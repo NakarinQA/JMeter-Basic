@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.3">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Plan">
+      <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+        <collectionProp name="Arguments.arguments"/>
+      </elementProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+    </TestPlan>
+    <hashTree>
+      <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="url" elementType="Argument">
+            <stringProp name="Argument.name">url</stringProp>
+            <stringProp name="Argument.value">9f76480f-37f0-46c5-970b-e2145817ceb9.mock.pstmn.io</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="contentType" elementType="Argument">
+            <stringProp name="Argument.name">contentType</stringProp>
+            <stringProp name="Argument.value">application/json</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="method" elementType="Argument">
+            <stringProp name="Argument.name">method</stringProp>
+            <stringProp name="Argument.value">POST</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="CallProcessManager" elementType="Argument">
+            <stringProp name="Argument.name">CallProcessManager</stringProp>
+            <stringProp name="Argument.value">TestDataCPM.csv</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="bodyFile" elementType="Argument">
+            <stringProp name="Argument.name">bodyFile</stringProp>
+            <stringProp name="Argument.value">data.txt</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="TestUserFile" elementType="Argument">
+            <stringProp name="Argument.name">TestUserFile</stringProp>
+            <stringProp name="Argument.value">TestData.csv</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="imgPathConfirmFraud" elementType="Argument">
+            <stringProp name="Argument.name">imgPathConfirmFraud</stringProp>
+            <stringProp name="Argument.value">imageConfirmFraud/</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="https" elementType="Argument">
+            <stringProp name="Argument.name">https</stringProp>
+            <stringProp name="Argument.value">https</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="imgPathAddmemo" elementType="Argument">
+            <stringProp name="Argument.name">imgPathAddmemo</stringProp>
+            <stringProp name="Argument.value">imageAddmemo/</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="imgPathUpdateGenuine" elementType="Argument">
+            <stringProp name="Argument.name">imgPathUpdateGenuine</stringProp>
+            <stringProp name="Argument.value">imageUpdateGenuine/</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="imgPathUpdateGenuineSC" elementType="Argument">
+            <stringProp name="Argument.name">imgPathUpdateGenuineSC</stringProp>
+            <stringProp name="Argument.value">imageUpdateGenuineSC/</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="imgPathUpdateStatusReassign" elementType="Argument">
+            <stringProp name="Argument.name">imgPathUpdateStatusReassign</stringProp>
+            <stringProp name="Argument.value">imageUpdateStatusReassign/</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="headersdata" elementType="Argument">
+            <stringProp name="Argument.name">headersdata</stringProp>
+            <stringProp name="Argument.value">headersdata.csv</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="headersdataCPM" elementType="Argument">
+            <stringProp name="Argument.name">headersdataCPM</stringProp>
+            <stringProp name="Argument.value">headersdatacpm.csv</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="Blacklist" elementType="Argument">
+            <stringProp name="Argument.name">Blacklist</stringProp>
+            <stringProp name="Argument.value">Blacklist.xlsx</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="NUM_THREADS" elementType="Argument">
+            <stringProp name="Argument.name">NUM_THREADS</stringProp>
+            <stringProp name="Argument.value">${__P(NUM_THREADS,1)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="RAMP_UP_PERIOD" elementType="Argument">
+            <stringProp name="Argument.name">RAMP_UP_PERIOD</stringProp>
+            <stringProp name="Argument.value">${__P(RAMP_UP_PERIOD,1)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="LOOP_COUNT" elementType="Argument">
+            <stringProp name="Argument.name">LOOP_COUNT</stringProp>
+            <stringProp name="Argument.value">${__P(LOOP_COUNT,1)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+        </collectionProp>
+      </Arguments>
+      <hashTree/>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="CheckData" enabled="true">
+        <intProp name="ThreadGroup.num_threads">1</intProp>
+        <intProp name="ThreadGroup.ramp_time">1</intProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller">
+          <stringProp name="LoopController.loops">1</stringProp>
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+        </elementProp>
+      </ThreadGroup>
+      <hashTree>
+        <OnceOnlyController guiclass="OnceOnlyControllerGui" testclass="OnceOnlyController" testname="Check Header Controller" enabled="true"/>
+        <hashTree>
+          <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="check header csv data " enabled="true">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="script">import org.apache.commons.io.FileUtils;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
+import java.util.List;
+
+// โหลดไฟล์ CSV และไฟล์ Header อ้างอิง
+String basePath = org.apache.jmeter.services.FileServer.getFileServer().getBaseDir();
+String csvFilePath = basePath + &quot;/&quot; + vars.get(&quot;TestUserFile&quot;);
+String headerFilePath = basePath + &quot;/&quot; + vars.get(&quot;headersdata&quot;);
+
+// อ่านข้อมูลจากไฟล์ CSV
+List&lt;String&gt; lines = FileUtils.readLines(new File(csvFilePath), &quot;UTF-8&quot;);
+if (lines == null || lines.isEmpty()) {
+    throw new IllegalArgumentException(&quot;ไฟล์ CSV ว่างเปล่าหรือไม่สามารถโหลดได้: &quot; + csvFilePath);
+}
+
+// อ่าน Expected Headers จากไฟล์ header.txt
+String expectedHeadersLine = FileUtils.readFileToString(new File(headerFilePath), &quot;UTF-8&quot;).trim();
+List&lt;String&gt; expectedHeaders = Arrays.asList(expectedHeadersLine.split(&quot;;&quot;));
+
+// ดึง Header จริงจาก CSV
+String actualHeadersLine = lines.get(0).trim();
+List&lt;String&gt; actualHeaders = Arrays.asList(actualHeadersLine.split(&quot;;&quot;));
+
+// ตรวจสอบ Header ที่ขาดหายไป
+List&lt;String&gt; missingHeaders = expectedHeaders.stream()
+    .filter(header -&gt; !actualHeaders.contains(header))
+    .toList();
+    
+
+if (!missingHeaders.isEmpty()) {
+    // ระบุ path ไฟล์ log
+    String logFilePath = basePath + &quot;/missing_headers_log_data.txt&quot;;
+    File logFile = new File(logFilePath);
+
+    try {
+        // ลบไฟล์หากมีอยู่
+        if (logFile.exists()) {
+            logFile.delete();
+        }
+
+        // สร้างไฟล์ใหม่และบันทึกข้อความ
+        String logMessage = &quot;Missing headers: &quot; + String.join(&quot;, &quot;, missingHeaders) + &quot;\n&quot;;
+        Files.write(Paths.get(logFilePath), logMessage.getBytes(), StandardOpenOption.CREATE);
+        log.info(&quot;Logged missing headers to: &quot; + logFilePath);
+    } catch (Exception e) {
+        log.error(&quot;Error writing to log file: &quot; + e.getMessage());
+        throw new RuntimeException(&quot;Error logging missing headers&quot;, e);
+    }
+
+    // หยุด Test Plan หรือ Thread Group ตามความต้องการ
+    //SampleResult.setStopTest(true); // หยุด Test Plan ทั้งหมด
+    throw new IllegalArgumentException(&quot;missing headers: &quot; + String.join(&quot;, &quot;, missingHeaders));
+}
+</stringProp>
+          </JSR223Sampler>
+          <hashTree/>
+          <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="check header csv CPM" enabled="true">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="script">import org.apache.commons.io.FileUtils;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
+import java.util.List;
+
+// โหลดไฟล์ CSV และไฟล์ Header อ้างอิง
+String basePath = org.apache.jmeter.services.FileServer.getFileServer().getBaseDir();
+String csvFilePath = basePath + &quot;/&quot; + vars.get(&quot;CallProcessManager&quot;);
+String headerFilePath = basePath + &quot;/&quot; + vars.get(&quot;headersdataCPM&quot;);
+
+// อ่านข้อมูลจากไฟล์ CSV
+List&lt;String&gt; lines = FileUtils.readLines(new File(csvFilePath), &quot;UTF-8&quot;);
+if (lines == null || lines.isEmpty()) {
+    throw new IllegalArgumentException(&quot;ไฟล์ CSV ว่างเปล่าหรือไม่สามารถโหลดได้: &quot; + csvFilePath);
+}
+
+// อ่าน Expected Headers จากไฟล์ header.txt
+String expectedHeadersLine = FileUtils.readFileToString(new File(headerFilePath), &quot;UTF-8&quot;).trim();
+List&lt;String&gt; expectedHeaders = Arrays.asList(expectedHeadersLine.split(&quot;;&quot;));
+
+// ดึง Header จริงจาก CSV
+String actualHeadersLine = lines.get(0).trim();
+List&lt;String&gt; actualHeaders = Arrays.asList(actualHeadersLine.split(&quot;;&quot;));
+
+// ตรวจสอบ Header ที่ขาดหายไป
+List&lt;String&gt; missingHeaders = expectedHeaders.stream()
+    .filter(header -&gt; !actualHeaders.contains(header))
+    .toList();
+
+if (!missingHeaders.isEmpty()) {
+    // ระบุ path ไฟล์ log
+    String logFilePath = basePath + &quot;/missing_headers_log_cpm.txt&quot;;
+    File logFile = new File(logFilePath);
+
+    try {
+        // ลบไฟล์หากมีอยู่
+        if (logFile.exists()) {
+            logFile.delete();
+        }
+
+        // สร้างไฟล์ใหม่และบันทึกข้อความ
+        String logMessage = &quot;Missing headers: &quot; + String.join(&quot;, &quot;, missingHeaders) + &quot;\n&quot;;
+        Files.write(Paths.get(logFilePath), logMessage.getBytes(), StandardOpenOption.CREATE);
+        log.info(&quot;Logged missing headers to: &quot; + logFilePath);
+    } catch (Exception e) {
+        log.error(&quot;Error writing to log file: &quot; + e.getMessage());
+        throw new RuntimeException(&quot;Error logging missing headers&quot;, e);
+    }
+
+    // หยุด Test Plan หรือ Thread Group ตามความต้องการ
+//    SampleResult.setStopTest(true); // หยุด Test Plan ทั้งหมด
+    throw new IllegalArgumentException(&quot;missing headers: &quot; + String.join(&quot;, &quot;, missingHeaders));
+}
+</stringProp>
+          </JSR223Sampler>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+      <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>true</samplerData>
+            <xml>true</xml>
+            <fieldNames>true</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+            <sentBytes>true</sentBytes>
+            <url>true</url>
+            <threadCounts>true</threadCounts>
+            <idleTime>true</idleTime>
+            <connectTime>true</connectTime>
+          </value>
+        </objProp>
+        <stringProp name="filename"></stringProp>
+      </ResultCollector>
+      <hashTree/>
+      <ResultCollector guiclass="SimpleDataWriter" testclass="ResultCollector" testname="Simple Data Writer" enabled="true">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>false</xml>
+            <fieldNames>true</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+            <sentBytes>true</sentBytes>
+            <url>true</url>
+            <threadCounts>true</threadCounts>
+            <idleTime>true</idleTime>
+            <connectTime>true</connectTime>
+          </value>
+        </objProp>
+        <stringProp name="filename">/Users/penploys/Desktop/Project SAS VIYA/SAS VIYA.csv</stringProp>
+      </ResultCollector>
+      <hashTree/>
+      <ResultCollector guiclass="StatGraphVisualizer" testclass="ResultCollector" testname="Aggregate Graph" enabled="true">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>false</xml>
+            <fieldNames>true</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+            <sentBytes>true</sentBytes>
+            <url>true</url>
+            <threadCounts>true</threadCounts>
+            <idleTime>true</idleTime>
+            <connectTime>true</connectTime>
+          </value>
+        </objProp>
+        <stringProp name="filename">/Users/qahivestaff02/Desktop/Files/sasviya/callprocessmanager.csv</stringProp>
+      </ResultCollector>
+      <hashTree/>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>
